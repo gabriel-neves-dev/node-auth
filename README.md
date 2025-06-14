@@ -9,6 +9,8 @@
 
 Este é um sistema simples de autenticação de usuários utilizando **Node.js**, **Express**, **Passport.js** e **PostgreSQL**. Ele permite que usuários se registrem, façam login, acessem um dashboard protegido e façam logout.
 
+---
+
 ## 🚀 Tecnologias Utilizadas
 
 - Node.js
@@ -19,9 +21,9 @@ Este é um sistema simples de autenticação de usuários utilizando **Node.js**
 - Bcrypt (Hash de senhas)
 - Express-session & express-flash
 
-## 📦 Instalação e Uso
+---
 
-Siga os passos abaixo para rodar o projeto localmente:
+## ⚡ Como rodar o projeto
 
 ### 1. Clone o repositório
 
@@ -36,31 +38,33 @@ cd node-auth
 npm install
 ```
 
-### 3. Configure o banco de dados
+### 3. Configure as variáveis de ambiente
 
-- Crie um banco PostgreSQL chamado `nodeauth` (ou altere o nome no arquivo `.env`).
-- Crie a tabela `users`:
-
-```sql
-CREATE TABLE users (
-  id SERIAL PRIMARY KEY,
-  name VARCHAR(100),
-  email VARCHAR(100) UNIQUE,
-  password VARCHAR(255)
-);
-```
-
-### 4. Configure as variáveis de ambiente
-
-- Renomeie o arquivo `.env.example` para `.env` (ou crie um novo `.env`) e preencha com suas credenciais do banco:
+Crie um arquivo `.env` na raiz do projeto com o seguinte conteúdo (ajuste conforme necessário):
 
 ```
-DB_USER=seu_usuario
-DB_PASSWORD=sua_senha
+DB_USER=nodeauth_user
+DB_PASSWORD=nodeauth_pass
+DB_DATABASE=nodeauth
 DB_HOST=localhost
 DB_PORT=5432
-DB_DATABASE=nodeauth
+
+PG_ADMIN_USER=postgres
+PG_ADMIN_PASSWORD=sua_senha_do_postgres
 ```
+
+> **Atenção:** O usuário `PG_ADMIN_USER` precisa ter permissão para criar bancos e usuários no PostgreSQL (normalmente o usuário `postgres`). 
+> **O script initDB.js já conta com instruções para que as devidas permissões sejam concedidas ao usuário.**
+
+### 4. Inicialize o banco de dados automaticamente
+
+Execute o comando abaixo para criar o banco, o usuário, conceder permissões e criar a tabela `users`:
+
+```sh
+npm run initdb
+```
+
+Pronto! O banco estará configurado para uso.
 
 ### 5. Inicie o servidor
 
@@ -89,6 +93,8 @@ Acesse em [http://localhost:4000](http://localhost:4000)
 ├── dbConfig.js
 ├── passportConfig.js
 ├── server.js
+├── scripts/
+│   └── initDb.js
 ├── views/
 │   ├── dashboard.ejs
 │   ├── index.ejs
@@ -107,10 +113,14 @@ Sinta-se à vontade para abrir issues ou pull requests!
 
 ---
 
+
 ## 📄 Licença
 
 Este projeto está sob a licença ISC.
 
 ---
+Desenvolvido por Gabriel 💙
 
-Feito com 💚 por [Seu Nome]
+---
+
+Este projeto faz parte do meu retorno ao universo da programação após um período afastado. Estou revisitando conceitos do básico ao avançado, então é possível que o código contenha alguns erros ou práticas que podem ser aprimoradas. Fique à vontade para sugerir melhorias ou apontar ajustes!
