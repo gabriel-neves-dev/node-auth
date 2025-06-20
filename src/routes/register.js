@@ -1,12 +1,82 @@
-const express = require('express');
-const app = express();
+
 const bcrypt = require('bcrypt');
 const { pool } = require('../dbConfig');
+const express = require('express');
+const router = express.Router(); // CERTO!
+const { checkAuthenticated, checkNotAuthenticaded } = require('../middlewares/authMiddlewares.js');
 
 
 
-
-
-app.get('/routes/register', (req, res) => {
+router.get('/', checkAuthenticated, (req, res) => {
   res.render('register');
 });
+router.post("/", async (req, res) => {
+  let { name, email, password, password2 } = req.body;
+
+  console.log({
+    name,
+    email,
+    password,
+    password2,
+  });
+
+  let errors = [];
+
+  if (!name || !password || !password2) {
+    errors.push({ message: "Preencha todos os campos!" });
+  }
+
+  if (password.length < 6) {
+    errors.push({ message: "Senha deve ter mais de 6 caracteres." });
+  }
+
+  if (password != password2) {
+    errors.push({ message: "As senhas devem ser iguais." });
+  }
+
+  if (errors.length > 0) {
+    res.render("register", { errors });
+  } else {
+    // form vlaidation has passed
+
+    let hashedPassword = await bcrypt.hash(password, 10);
+    console.log(hashedPassword);
+
+    pool.query(
+      `SELECT * FROM users
+      WHERE email = $1`,
+      [email],
+      (err, results) => {
+        if (err) {
+          throw err;
+        }
+        console.log(results.rows);
+
+        if (results.rows.length > 0) {
+          errors.push({ message: "Email already registered" });
+          res.render("register", { errors });
+        } else {
+          pool.query(
+            `INSERT INTO users (name, email, password)
+            VALUES ($1, $2, $3)
+            RETURNING id, password`,
+            [name, email, hashedPassword],
+            (err, results) => {
+              if (err) {
+                throw err;
+              }
+
+              console.log(results.rows);
+              req.flash(
+                "sucess_msg",
+                "Registro completo com sucesso! Por favor faça o login"
+              );
+              res.redirect("/users/login");
+            }
+          );
+        }
+      }
+    );
+  }
+});
+module.exports = router;
