@@ -1,6 +1,7 @@
 const express = require('express');
-const app = express();
+const router = express.Router(); // CERTO!
 
-app.get('/', (req, res) => {
-  res.render('index');
+router.get("/", (req, res) => {
+  res.render("index");
 });
+module.exports = router;
