@@ -1,8 +1,10 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const passport = require('passport');
-const { checkAuthenticated, checkNotAuthenticaded } = require('../middlewares/authMiddlewares.js');
-
+const passport = require("passport");
+const {
+  checkAuthenticated,
+  checkNotAuthenticaded,
+} = require("../middlewares/authMiddlewares.js");
 
 router.get("/", checkAuthenticated, (req, res) => {
   res.render("login");
