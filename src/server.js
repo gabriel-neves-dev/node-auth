@@ -5,6 +5,8 @@ const app = express();
 const session = require("express-session");
 const flash = require("express-flash");
 const passport = require("passport");
+const errorHandler= require("./middlewares/errorMiddlewares.js");
+const authMiddleware = require("./middlewares/authMiddlewares.js");
 
 
 
@@ -52,8 +54,11 @@ const logoutRouter = require("./routes/logout.js");
 app.use("/users/logout", logoutRouter);
 
 const dashboardRouter = require("./routes/dashboard.js");
-app.use("/users/dashboard", dashboardRouter);
+app.use("/users/dashboard", authMiddleware.checkAuthenticated, dashboardRouter);
 
+
+app.use(errorHandler.errorHandler)
+app.use(errorHandler.notFoundHandler);
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
