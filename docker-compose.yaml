@@ -1,0 +1,33 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:14
+    environment:
+      POSTGRES_DB: nodeauth
+      POSTGRES_USER: nodeauth_user
+      POSTGRES_PASSWORD: nodeauth_pass
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./init:/docker-entrypoint-initdb.d
+      - pgdata:/var/lib/postgresql/data
+
+  app:
+    build: .
+    ports:
+      - "4000:4000"
+    environment:
+      DB_USER: nodeauth_user
+      DB_PASSWORD: nodeauth_pass
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_DATABASE: nodeauth
+      SESSION_SECRET: sua_sessao_secreta
+    depends_on:
+      - db
+    volumes:
+      - .:/app
+
+volumes:
+  pgdata:

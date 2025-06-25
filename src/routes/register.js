@@ -1,14 +1,14 @@
-
-const bcrypt = require('bcrypt');
-const { pool } = require('../dbConfig');
-const express = require('express');
+const bcrypt = require("bcrypt");
+const { pool } = require("../dbConfig");
+const express = require("express");
 const router = express.Router(); // CERTO!
-const { checkAuthenticated, checkNotAuthenticaded } = require('../middlewares/authMiddlewares.js');
+const {
+  checkAuthenticated,
+  checkNotAuthenticaded,
+} = require("../middlewares/authMiddlewares.js");
 
-
-
-router.get('/', checkAuthenticated, (req, res) => {
-  res.render('register');
+router.get("/", checkAuthenticated, (req, res) => {
+  res.render("register");
 });
 router.post("/", async (req, res) => {
   let { name, email, password, password2 } = req.body;
@@ -42,7 +42,7 @@ router.post("/", async (req, res) => {
     let hashedPassword = await bcrypt.hash(password, 10);
     console.log(hashedPassword);
 
-    pool.query(
+    await pool.query(
       `SELECT * FROM users
       WHERE email = $1`,
       [email],

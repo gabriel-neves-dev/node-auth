@@ -20,10 +20,11 @@ Este é um sistema simples de autenticação de usuários utilizando **Node.js**
 - PostgreSQL (Banco de dados)
 - Bcrypt (Hash de senhas)
 - Express-session & express-flash
+- Docker & Docker Compose
 
 ---
 
-## ⚡ Como rodar o projeto
+## ⚡ Como rodar o projeto com Docker
 
 ### 1. Clone o repositório
 
@@ -32,13 +33,27 @@ git clone https://github.com/seu-usuario/node-auth.git
 cd node-auth
 ```
 
-### 2. Instale as dependências
+### 2. Inicie os containers
+
+```sh
+docker-compose up -d
+```
+
+### 3. Acesse o terminal do container do backend
+
+```sh
+docker exec -it node-auth-backend bash
+```
+
+### 4. Instale as dependências
+
+Dentro do terminal do container, execute:
 
 ```sh
 npm install
 ```
 
-### 3. Configure as variáveis de ambiente
+### 5. Configure as variáveis de ambiente
 
 Crie um arquivo `.env` na raiz do projeto com o seguinte conteúdo (ajuste conforme necessário):
 
@@ -46,7 +61,7 @@ Crie um arquivo `.env` na raiz do projeto com o seguinte conteúdo (ajuste confo
 DB_USER=nodeauth_user
 DB_PASSWORD=nodeauth_pass
 DB_DATABASE=nodeauth
-DB_HOST=localhost
+DB_HOST=db
 DB_PORT=5432
 
 PG_ADMIN_USER=postgres
@@ -54,9 +69,9 @@ PG_ADMIN_PASSWORD=sua_senha_do_postgres
 ```
 
 > **Atenção:** O usuário `PG_ADMIN_USER` precisa ter permissão para criar bancos e usuários no PostgreSQL (normalmente o usuário `postgres`). 
-> **O script initDB.js já conta com instruções para que as devidas permissões sejam concedidas ao usuário.**
 
-### 4. Inicialize o banco de dados automaticamente
+
+### 6. Inicialize o banco de dados automaticamente
 
 Execute o comando abaixo para criar o banco, o usuário, conceder permissões e criar a tabela `users`:
 
@@ -66,7 +81,7 @@ npm run initdb
 
 Pronto! O banco estará configurado para uso.
 
-### 5. Inicie o servidor
+### 7. Inicie o servidor
 
 ```sh
 npm run dev
