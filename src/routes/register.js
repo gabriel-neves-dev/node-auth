@@ -8,7 +8,10 @@ const {
 } = require("../middlewares/authMiddlewares.js");
 
 router.get("/", checkAuthenticated, (req, res) => {
-  res.render("register");
+  res.status(200).json({
+    message: "Registro realizado com sucesso!",
+  });
+
 });
 router.post("/", async (req, res) => {
   let { name, email, password, password2 } = req.body;
@@ -35,7 +38,9 @@ router.post("/", async (req, res) => {
   }
 
   if (errors.length > 0) {
-    res.render("register", { errors });
+    return res.statusCode(400).json({
+      message: "Preencha todos os campos!",
+    });
   } else {
     // form vlaidation has passed
 
@@ -54,7 +59,10 @@ router.post("/", async (req, res) => {
 
         if (results.rows.length > 0) {
           errors.push({ message: "Email already registered" });
-          res.render("register", { errors });
+          res.status(400).json({
+            message: "Email já registrado",
+          });
+
         } else {
           pool.query(
             `INSERT INTO users (name, email, password)
@@ -71,7 +79,10 @@ router.post("/", async (req, res) => {
                 "sucess_msg",
                 "Registro completo com sucesso! Por favor faça o login"
               );
-              res.redirect("/users/login");
+              res.status(200).json({
+                message: "Registro completo com sucesso! Por favor faça o login",
+              });
+
             }
           );
         }

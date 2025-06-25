@@ -1,17 +1,24 @@
 //MIDDLEWARES
 function checkAuthenticated(req, res, next) {
   if (req.isAuthenticated()) {
-    return res.redirect("/users/dashboard")
+    return res.status(200).json({
+      message: "User is authenticated",
+
+    })
   }
   next()
 }
 
 function checkNotAuthenticaded(req, res, next){
   if (req.isAuthenticated()) {
-    return next()
+    return res.status(200).json({
+      message: "User is authenticated",
+    })
   }
 
-  res.redirect("/users/login")
+  res.status(401).json({
+    message: "User is not authenticated",
+  })
 }
 
 module.exports = { checkAuthenticated, checkNotAuthenticaded };

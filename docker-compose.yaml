@@ -27,7 +27,7 @@ services:
     depends_on:
       - db
     volumes:
-      - .:/app
+      - .:/src
 
 volumes:
   pgdata:

@@ -2,12 +2,9 @@
 
 const express = require("express");
 const app = express();
-const { pool } = require("./dbConfig");
-const bcrypt = require("bcrypt");
 const session = require("express-session");
 const flash = require("express-flash");
 const passport = require("passport");
-const { checkAuthenticated, checkNotAuthenticaded } = require("./middlewares/authMiddlewares.js");
 
 
 
@@ -15,8 +12,8 @@ const PORT = process.env.PORT || 4000;
 
 const path = require("path");
 
-app.set("view engine", "ejs", "views");
 
+app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 app.use(
