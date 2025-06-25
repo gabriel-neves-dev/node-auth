@@ -1,5 +1,6 @@
 const bcrypt = require("bcrypt");
 const express = require("express");
+const jwt = require("jsonwebtoken");
 const router = express.Router();
 const {
   checkAuthenticated,
@@ -35,11 +36,18 @@ router.post("/", async (req, res) => {
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
       // Senha incorreta
-      return res.status(401).json({ error: "Senha incorreta." });
+      return res.status(401).json({ error: "Email e/ou senha incorretos." });
     }
 
     // Login bem-sucedido
-    return res.status(200).json({ message: "Login realizado com sucesso!" });
+    console.log("Login realizado com sucesso!");
+    const payload = { id: user.id, name: user.name, email: user.email };
+    const token = jwt.sign(payload, process.env.JWT_SECRET, {
+      expiresIn: "1h",
+    });
+    return res
+      .status(200)
+      .json({ message: "Login realizado com sucesso!", token });
   } catch (err) {
     console.error(err);
     return res.status(500).json({ error: "Erro ao fazer login." });
