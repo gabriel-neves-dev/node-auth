@@ -2,12 +2,11 @@
 
 const express = require("express");
 const app = express();
-const { pool } = require("./dbConfig");
-const bcrypt = require("bcrypt");
 const session = require("express-session");
 const flash = require("express-flash");
 const passport = require("passport");
-const { checkAuthenticated, checkNotAuthenticaded } = require("./middlewares/authMiddlewares.js");
+const errorHandler= require("./middlewares/errorMiddlewares.js");
+const authMiddleware = require("./middlewares/authMiddlewares.js");
 
 
 
@@ -15,8 +14,8 @@ const PORT = process.env.PORT || 4000;
 
 const path = require("path");
 
-app.set("view engine", "ejs", "views");
 
+app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 app.use(
@@ -55,8 +54,11 @@ const logoutRouter = require("./routes/logout.js");
 app.use("/users/logout", logoutRouter);
 
 const dashboardRouter = require("./routes/dashboard.js");
-app.use("/users/dashboard", dashboardRouter);
+app.use("/users/dashboard", authMiddleware.checkAuthenticated, dashboardRouter);
 
+
+app.use(errorHandler.errorHandler)
+app.use(errorHandler.notFoundHandler);
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);

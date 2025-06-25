@@ -1,17 +1,5 @@
-//MIDDLEWARES
-function checkAuthenticated(req, res, next) {
-  if (req.isAuthenticated()) {
-    return res.redirect("/users/dashboard")
-  }
-  next()
-}
+const passport = require("passport");
 
-function checkNotAuthenticaded(req, res, next){
-  if (req.isAuthenticated()) {
-    return next()
-  }
+const checkAuthenticated = passport.authenticate("jwt", { session: false });
 
-  res.redirect("/users/login")
-}
-
-module.exports = { checkAuthenticated, checkNotAuthenticaded };
+module.exports = { checkAuthenticated };

@@ -13,7 +13,8 @@ router.get("/", (req, res) => {
         console.error("Erro ao destruir sessão:", err);
         return res.status(500).send("Erro ao destruir sessão");
       }
-      res.redirect("/");
+      return res.status(200).send("Logout realizado com sucesso");
+
     });
   });
 });

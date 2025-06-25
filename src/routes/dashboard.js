@@ -1,10 +1,15 @@
 const express = require('express');
 const router = express.Router();
-const { checkAuthenticated, checkNotAuthenticaded } = require('../middlewares/authMiddlewares.js');
+
+const { checkAuthenticated } = require('../middlewares/authMiddlewares');
 
 
-router.get("/", checkNotAuthenticaded, (req, res) => {
-  res.render("dashboard", { user: req.user.name });
+router.get("/", checkAuthenticated, (req, res) => {
+  res.status(200).json({
+    message: "Welcome to the Dashboard!" + " " + req.user.name,
+
+  });
+
 });
 
 module.exports = router;
